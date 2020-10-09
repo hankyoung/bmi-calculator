@@ -1,24 +1,37 @@
 import React, { useState, useRef, useEffect } from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
-import { colors, screenWidth } from "../utils/Constants";
-import { MaterialIcons, MaterialCommunityIcons } from "@expo/vector-icons";
+import {
+  buttonHeight,
+  buttonWidth,
+  colors,
+  actionType,
+} from "../utils/Constants";
+import { Feather } from "@expo/vector-icons";
 
 export default function ValueAdjustable(props) {
-  const [value, setValue] = useState(props.initialValue);
+  const [value, setValue] = useState(props.value);
   const [isAdd, setIsAdd] = useState(false);
   const [trigger, setTrigger] = useState(false);
   const timerId = useRef(1);
 
   const addValue = (delta) => {
-    setValue((value) => (value + delta >= 0 ? value + delta : 0));
+    setValue((value) => (value + delta >= 1 ? value + delta : 1));
   };
 
-  const handlePressIn = (isAdd) => {
-    addValue(isAdd ? 1 : -1);
-    setIsAdd(isAdd);
+  const handleLongPress = (action) => {
+    switch (action) {
+      case actionType.ADD:
+        addValue(1);
+        setIsAdd(true);
+        break;
+      case actionType.SUBTRACT:
+        addValue(-1);
+        setIsAdd(false);
+        break;
+      default:
+    }
     setTrigger(true);
   };
-  const handlePressOut = () => setTrigger(false);
 
   // Observe buttons action
   useEffect(() => {
@@ -36,6 +49,10 @@ export default function ValueAdjustable(props) {
     props.onValueChange(value);
   }, [value]);
 
+  useEffect(() => {
+    setValue(props.value);
+  }, [props.value]);
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>{props.title}</Text>
@@ -46,26 +63,24 @@ export default function ValueAdjustable(props) {
       <View style={styles.buttons}>
         {/* Minus button */}
         <TouchableOpacity
-          onPressIn={() => handlePressIn(false)}
-          onPressOut={handlePressOut}
+          onPressIn={() => addValue(-1)}
+          onLongPress={() => handleLongPress(actionType.SUBTRACT)}
+          onPressOut={() => setTrigger(false)}
         >
-          <MaterialCommunityIcons
-            style={styles.iconButton}
-            name="minus-circle"
-            size={48}
-          />
+          <View style={styles.round}>
+            <Feather name="minus" size={32} color="#fff" />
+          </View>
         </TouchableOpacity>
 
         {/* Add button */}
         <TouchableOpacity
-          onPressIn={() => handlePressIn(true)}
-          onPressOut={handlePressOut}
+          onPressIn={() => addValue(1)}
+          onPressIn={() => handleLongPress(actionType.ADD)}
+          onPressOut={() => setTrigger(false)}
         >
-          <MaterialIcons
-            style={styles.iconButton}
-            name="add-circle"
-            size={48}
-          />
+          <View style={styles.round}>
+            <Feather name="plus" size={32} color="#fff" />
+          </View>
         </TouchableOpacity>
       </View>
     </View>
@@ -76,14 +91,15 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: colors.purpleActive,
     borderRadius: 10,
-    width: screenWidth / 2.4,
-    height: screenWidth / 2.4,
+    width: buttonWidth,
+    height: buttonHeight,
     alignItems: "center",
     justifyContent: "center",
   },
   title: {
     color: colors.grey,
     fontSize: 16,
+    fontWeight: "bold",
   },
   unit: {
     color: "#fff",
@@ -96,11 +112,20 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   buttons: {
+    marginTop: 5,
     flexDirection: "row",
-    justifyContent: "space-between",
-    width: screenWidth / 2.4 / 1.5,
+    justifyContent: "space-evenly",
+    width: buttonWidth,
+  },
+  round: {
+    width: 40,
+    height: 40,
+    backgroundColor: colors.grey,
+    borderRadius: 20,
+    justifyContent: "center",
+    alignItems: "center",
   },
   iconButton: {
-    color: colors.green,
+    color: colors.grey,
   },
 });

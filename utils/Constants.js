@@ -4,6 +4,9 @@ import { Dimensions } from "react-native";
 export const statusBarHeight = Constants.statusBarHeight;
 export const screenWidth = Dimensions.get("screen").width;
 export const screenHeight = Dimensions.get("screen").height;
+export const componentWidth = screenWidth * 0.9;
+export const buttonWidth = screenWidth * 0.4;
+export const buttonHeight = buttonWidth;
 
 export const colors = {
   blue: "#00C6F0",
@@ -16,4 +19,9 @@ export const colors = {
   black: "#000",
   green: "#00B594",
   yellow: "yellow",
+};
+
+export const actionType = {
+  ADD: "ADD",
+  SUBTRACT: "SUBTRACT",
 };

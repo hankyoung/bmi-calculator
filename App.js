@@ -1,5 +1,5 @@
 import { StatusBar } from "expo-status-bar";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useState } from "react";
 import {
   SafeAreaView,
   StyleSheet,
@@ -7,27 +7,32 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { screenWidth, statusBarHeight } from "./utils/Constants";
+import {
+  componentWidth,
+  screenWidth,
+  statusBarHeight,
+} from "./utils/Constants";
 import GenderButton from "./components/GenderButton";
 import { Foundation } from "@expo/vector-icons";
 import { colors } from "./utils/Constants";
-import Slider from "@react-native-community/slider";
 import ValueAdjustable from "./components/ValueAdjustable";
 import ResultModal from "./components/ResultModal";
 import { calculateBmi } from "./utils/BmiUtils";
+import HeightSection from "./components/HeightSection";
 
 export default function App() {
-  const [isMale, setIsMale] = useState(false);
-  const [height, setHeight] = useState(170);
-  const [weight, setWeight] = useState(51);
+  const [isMale, setIsMale] = useState(true);
+  const [height, setHeight] = useState(150);
+  const [weight, setWeight] = useState(50);
   const [age, setAge] = useState(20);
   const [modalVisible, setModalVisible] = useState(false);
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      <StatusBar style="auto" />
+      <StatusBar style="light" />
       <View style={styles.header}>
-        <Text style={{ color: "#fff", fontSize: 28 }}>BMI CALCULATOR</Text>
+        <Text style={styles.headerTitle}>BMI CALCULATOR</Text>
+        <View style={styles.divider} />
       </View>
 
       <View style={styles.genderButtons}>
@@ -35,53 +40,35 @@ export default function App() {
           icon={
             <Foundation name="male-symbol" size={100} color={colors.blue} />
           }
-          color={isMale ? colors.purpleActive : colors.purpleInactive}
+          title={"MALE"}
+          color={isMale ? colors.purpleInactive : colors.purpleActive}
           onPress={() => setIsMale(true)}
-        >
-          MALE
-        </GenderButton>
+        />
         <GenderButton
           icon={
             <Foundation name="female-symbol" size={100} color={colors.red} />
           }
-          color={isMale ? colors.purpleInactive : colors.purpleActive}
+          title={"FEMALE"}
+          color={isMale ? colors.purpleActive : colors.purpleInactive}
           onPress={() => setIsMale(false)}
-        >
-          FEMALE
-        </GenderButton>
-      </View>
-
-      <View style={styles.heightSection}>
-        <Text style={styles.text}>HEIGHT</Text>
-        <Text style={styles.number}>
-          {height}
-          <Text style={{ color: "#fff", fontWeight: "bold", fontSize: 16 }}>
-            {" "}
-            cm
-          </Text>
-        </Text>
-        <Slider
-          style={styles.slider}
-          minimumValue={0}
-          maximumValue={200}
-          value={height}
-          step={1}
-          onValueChange={(value) => setHeight(value)}
-          minimumTrackTintColor={colors.pink}
-          maximumTrackTintColor={colors.black}
         />
       </View>
+
+      <HeightSection
+        height={height}
+        onValueChange={(height) => setHeight(height)}
+      />
 
       <View style={styles.valueAdjustContainer}>
         <ValueAdjustable
           onValueChange={(value) => setWeight(value)}
-          initialValue={weight}
+          value={weight}
           title={"WEIGHT"}
           unit={"kg"}
         />
         <ValueAdjustable
           onValueChange={(value) => setAge(value)}
-          initialValue={age}
+          value={age}
           title={"AGE"}
         />
       </View>
@@ -94,54 +81,55 @@ export default function App() {
       </TouchableOpacity>
 
       <ResultModal
-        inputData={{ isMale, height, weight, age }}
+        inputData={{ isMale }}
         modalVisible={modalVisible}
         item={calculateBmi(isMale, weight, height)}
         setModalVisible={(isVisible) => setModalVisible(isVisible)}
+        onReset={() => {
+          setHeight(150);
+          setWeight(50);
+          setAge(20);
+        }}
       />
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  header: {
-    borderBottomColor: colors.purpleActive,
-    borderBottomWidth: 5,
-    height: 50,
-    width: "100%",
-    alignItems: "center",
-  },
   safeArea: {
     paddingTop: statusBarHeight,
     flex: 1,
     backgroundColor: colors.darkBlue,
     alignItems: "center",
-    paddingHorizontal: 20,
     justifyContent: "space-evenly",
   },
+  header: {
+    marginTop: 32,
+    alignItems: "center",
+  },
+  headerTitle: {
+    color: "#fff",
+    fontSize: 28,
+  },
+  divider: {
+    marginTop: 16,
+    borderColor: "#19132f",
+    borderWidth: 3,
+    height: 1,
+    width: screenWidth,
+  },
   genderButtons: {
-    width: "100%",
+    width: componentWidth,
     flexDirection: "row",
     justifyContent: "space-between",
   },
-  heightSection: {
-    alignItems: "center",
-    width: "100%",
-    backgroundColor: colors.purpleActive,
-    height: screenWidth / 2.4 - 40,
-    borderRadius: 10,
-    padding: 12,
-  },
-  text: { color: colors.grey, fontSize: 16 },
-  number: { color: "#fff", fontSize: 36, fontWeight: "bold" },
-  slider: { width: "100%", height: 40 },
   valueAdjustContainer: {
-    width: "100%",
+    width: componentWidth,
     flexDirection: "row",
     justifyContent: "space-between",
   },
   button: {
-    width: "100%",
+    width: componentWidth,
     height: 60,
     backgroundColor: colors.pink,
     borderRadius: 10,
