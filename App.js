@@ -17,7 +17,7 @@ import ResultModal from "./components/ResultModal";
 import { calculateBmi } from "./utils/BmiUtils";
 
 export default function App() {
-  const [male, setMale] = useState(false);
+  const [isMale, setIsMale] = useState(false);
   const [height, setHeight] = useState(170);
   const [weight, setWeight] = useState(51);
   const [age, setAge] = useState(20);
@@ -35,8 +35,8 @@ export default function App() {
           icon={
             <Foundation name="male-symbol" size={100} color={colors.blue} />
           }
-          color={male ? colors.purpleActive : colors.purpleInactive}
-          onPress={() => setMale(true)}
+          color={isMale ? colors.purpleActive : colors.purpleInactive}
+          onPress={() => setIsMale(true)}
         >
           MALE
         </GenderButton>
@@ -44,8 +44,8 @@ export default function App() {
           icon={
             <Foundation name="female-symbol" size={100} color={colors.red} />
           }
-          color={male ? colors.purpleInactive : colors.purpleActive}
-          onPress={() => setMale(false)}
+          color={isMale ? colors.purpleInactive : colors.purpleActive}
+          onPress={() => setIsMale(false)}
         >
           FEMALE
         </GenderButton>
@@ -72,7 +72,7 @@ export default function App() {
         />
       </View>
 
-      <View style={styles.weightAgeSection}>
+      <View style={styles.valueAdjustContainer}>
         <ValueAdjustable
           onValueChange={(value) => setWeight(value)}
           initialValue={weight}
@@ -94,8 +94,9 @@ export default function App() {
       </TouchableOpacity>
 
       <ResultModal
+        inputData={{ isMale, height, weight, age }}
         modalVisible={modalVisible}
-        item={calculateBmi(weight, height)}
+        item={calculateBmi(isMale, weight, height)}
         setModalVisible={(isVisible) => setModalVisible(isVisible)}
       />
     </SafeAreaView>
@@ -131,20 +132,10 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     padding: 12,
   },
-  text: {
-    color: colors.grey,
-    fontSize: 16,
-  },
-  number: {
-    color: "#fff",
-    fontSize: 36,
-    fontWeight: "bold",
-  },
-  slider: {
-    width: "100%",
-    height: 40,
-  },
-  weightAgeSection: {
+  text: { color: colors.grey, fontSize: 16 },
+  number: { color: "#fff", fontSize: 36, fontWeight: "bold" },
+  slider: { width: "100%", height: 40 },
+  valueAdjustContainer: {
     width: "100%",
     flexDirection: "row",
     justifyContent: "space-between",

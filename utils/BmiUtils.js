@@ -8,42 +8,42 @@ const calculateBmiIndex = (weight, height) => {
 const status = {
   UNDER: {
     text: "UNDERWEIGHT",
-    color: colors.yellow,
+    titleColor: colors.yellow,
     desc: "You are underweighted. Eat more!",
   },
   NORMAL: {
     text: "NORMAL",
-    color: colors.green,
+    titleColor: colors.green,
     desc: "You have a normal body weight. Good job!",
   },
   OVER: {
     text: "OVERWEIGHT",
-    color: colors.red,
+    titleColor: colors.red,
     desc: "You are overweighted. Eat less!",
   },
 };
 
-export const calculateBmi = (weight, height) => {
+export const calculateBmi = (isMale, weight, height) => {
   let bmiIndex = calculateBmiIndex(weight, height);
 
-  let result = {
-    index: bmiIndex,
-  };
-  if (bmiIndex < 18.5) {
-    result = {
-      ...result,
-      data: status.UNDER,
-    };
-  } else if (bmiIndex >= 18.5 && bmiIndex < 30) {
-    result = {
-      ...result,
-      data: status.NORMAL,
-    };
+  let data;
+  if (isMale) {
+    if (bmiIndex < 20) {
+      data = status.UNDER;
+    } else if (bmiIndex >= 20 && bmiIndex < 25) {
+      data = status.NORMAL;
+    } else {
+      data = status.OVER;
+    }
   } else {
-    result = {
-      ...result,
-      data: status.OVER,
-    };
+    if (bmiIndex < 18) {
+      data = status.UNDER;
+    } else if (bmiIndex >= 18 && bmiIndex < 23) {
+      data = status.NORMAL;
+    } else {
+      data = status.OVER;
+    }
   }
-  return result;
+
+  return { index: bmiIndex, data: data };
 };

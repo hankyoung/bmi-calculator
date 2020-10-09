@@ -1,6 +1,7 @@
 import React from "react";
 import { Modal, View, TouchableOpacity, Text, StyleSheet } from "react-native";
 import { colors, screenHeight, screenWidth } from "../utils/Constants";
+import { Foundation } from "@expo/vector-icons";
 
 export default function ResultModal(props) {
   return (
@@ -12,18 +13,44 @@ export default function ResultModal(props) {
     >
       <View style={styles.modalContainer}>
         <Text style={styles.headerText}>Your Result</Text>
-
         <View style={styles.modalBodyContainer}>
-          <Text
-            style={{
-              ...styles.resultTitle,
-              color: props.item.data.color,
-            }}
-          >
-            {props.item.data.text}
-          </Text>
+          <View>
+            <Text style={{ textAlign: "center", color: "#fff" }}>
+              Gender:{" "}
+              <Foundation
+                name={props.inputData.isMale ? "male-symbol" : "female-symbol"}
+                size={16}
+                color={props.inputData.isMale ? colors.blue : colors.red}
+              />
+            </Text>
+            <Text
+              style={{
+                ...styles.resultTitle,
+                color: props.item.data.titleColor,
+              }}
+            >
+              {props.item.data.text}
+            </Text>
+          </View>
+
           <Text style={styles.resultIndex}>{props.item.index}</Text>
-          <Text style={styles.resultDesc}>{props.item.data.desc}</Text>
+
+          <View>
+            <View
+              style={{ justifyContent: "space-evenly", flexDirection: "row" }}
+            >
+              <Text style={{ color: colors.yellow }}>
+                Height: {props.inputData.height}
+              </Text>
+              <Text style={{ color: colors.yellow }}>
+                Weight: {props.inputData.weight}
+              </Text>
+              <Text style={{ color: colors.yellow }}>
+                Age: {props.inputData.age}
+              </Text>
+            </View>
+            <Text style={styles.resultDesc}>{props.item.data.desc}</Text>
+          </View>
         </View>
 
         <TouchableOpacity
@@ -43,14 +70,10 @@ const styles = StyleSheet.create({
     width: "100%",
     backgroundColor: colors.darkBlue,
     paddingHorizontal: 10,
-    paddingVertical: 20,
+    paddingVertical: 16,
     justifyContent: "space-between",
   },
-  headerText: {
-    color: "#fff",
-    fontSize: 36,
-    fontWeight: "bold",
-  },
+  headerText: { color: "#fff", fontSize: 36, fontWeight: "bold" },
   modalBodyContainer: {
     backgroundColor: colors.purpleActive,
     width: "100%",
@@ -67,25 +90,17 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-  buttonLabel: {
-    color: "#fff",
+  buttonLabel: { color: "#fff", fontSize: 24, fontWeight: "bold" },
+  resultTitle: {
     fontSize: 24,
     fontWeight: "bold",
   },
-  resultTitle: {
-    fontSize: 18,
-    fontWeight: "bold",
-  },
-  resultIndex: {
-    fontSize: 66,
-    fontWeight: "bold",
-    color: "#fff",
-  },
+  resultIndex: { fontSize: 66, fontWeight: "bold", color: "#fff" },
   resultDesc: {
-    fontSize: 18,
+    fontSize: 24,
     fontWeight: "bold",
     color: "#fff",
-    width: screenWidth / 1.35,
+    marginHorizontal: 30,
     textAlign: "center",
   },
 });
