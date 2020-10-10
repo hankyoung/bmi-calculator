@@ -1,6 +1,6 @@
 import React from "react";
 import { View, Text, StyleSheet, TouchableWithoutFeedback } from "react-native";
-import { buttonWidth, colors, screenWidth } from "../utils/Constants";
+import { buttonHeight, buttonWidth, colors } from "../utils/Constants";
 
 export default function GenderButton(props) {
   return (
@@ -18,12 +18,11 @@ const styles = StyleSheet.create({
     backgroundColor: colors.purpleActive,
     borderRadius: 10,
     width: buttonWidth,
-    height: buttonWidth + 10,
+    height: buttonHeight,
     alignItems: "center",
     justifyContent: "center",
   },
   text: {
-    marginTop: 10,
     color: colors.grey,
     fontSize: 16,
     fontWeight: "bold",

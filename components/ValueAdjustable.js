@@ -9,13 +9,12 @@ import {
 import { Feather } from "@expo/vector-icons";
 
 export default function ValueAdjustable(props) {
-  const [value, setValue] = useState(props.value);
   const [isAdd, setIsAdd] = useState(false);
   const [trigger, setTrigger] = useState(false);
   const timerId = useRef(1);
 
   const addValue = (delta) => {
-    setValue((value) => (value + delta >= 1 ? value + delta : 1));
+    props.setValue((value) => (value + delta >= 1 ? value + delta : 1));
   };
 
   const handleLongPress = (action) => {
@@ -38,49 +37,40 @@ export default function ValueAdjustable(props) {
     if (trigger) {
       timerId.current = setInterval(() => {
         addValue(isAdd ? 1 : -1);
-      }, 150);
+      }, 100);
     } else {
       clearInterval(timerId.current);
     }
   }, [trigger]);
 
-  // Observer value changes
-  useEffect(() => {
-    props.onValueChange(value);
-  }, [value]);
-
-  useEffect(() => {
-    setValue(props.value);
-  }, [props.value]);
-
   return (
     <View style={styles.container}>
       <Text style={styles.title}>{props.title}</Text>
       <Text style={styles.number}>
-        {value}
+        {props.value}
         <Text style={styles.unit}> {props.unit}</Text>
       </Text>
       <View style={styles.buttons}>
         {/* Minus button */}
         <TouchableOpacity
+          style={styles.round}
+          delayLongPress={500}
           onPressIn={() => addValue(-1)}
           onLongPress={() => handleLongPress(actionType.SUBTRACT)}
           onPressOut={() => setTrigger(false)}
         >
-          <View style={styles.round}>
-            <Feather name="minus" size={32} color="#fff" />
-          </View>
+          <Feather name="minus" size={32} color="#fff" />
         </TouchableOpacity>
 
         {/* Add button */}
         <TouchableOpacity
+          style={styles.round}
+          delayLongPress={500}
           onPressIn={() => addValue(1)}
           onPressIn={() => handleLongPress(actionType.ADD)}
           onPressOut={() => setTrigger(false)}
         >
-          <View style={styles.round}>
-            <Feather name="plus" size={32} color="#fff" />
-          </View>
+          <Feather name="plus" size={32} color="#fff" />
         </TouchableOpacity>
       </View>
     </View>

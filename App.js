@@ -61,13 +61,13 @@ export default function App() {
 
       <View style={styles.valueAdjustContainer}>
         <ValueAdjustable
-          onValueChange={(value) => setWeight(value)}
+          setValue={(value) => setWeight(value)}
           value={weight}
           title={"WEIGHT"}
           unit={"kg"}
         />
         <ValueAdjustable
-          onValueChange={(value) => setAge(value)}
+          setValue={(value) => setAge(value)}
           value={age}
           title={"AGE"}
         />
@@ -104,7 +104,6 @@ const styles = StyleSheet.create({
     justifyContent: "space-evenly",
   },
   header: {
-    marginTop: 32,
     alignItems: "center",
   },
   headerTitle: {
